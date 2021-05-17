@@ -1,0 +1,178 @@
+public interface ClaimRepository {//same as DeparmentDAO
+
+	void addClaim(Claim CdRef);   //C - add/create
+	Claim findClaim(int Cdno);     //R - find/reading
+	Set<Claim> findClaims();     //R - find all/reading all
+	void modifyClaim(Claim CdRef); //U - modify/update
+	void removeClaim(int Cdno); //D - remove/delete
+
+}
+
+public interface IuserRepository {//same as DeparmentDAO
+
+	void addIuser(Iuser UdRef);   //C - add/create
+	Iuser findIuser(int Udno);     //R - find/reading
+	Set<Iuser> findIusers();     //R - find all/reading all
+	void modifyIuser(Iuser UdRef); //U - modify/update
+	void removeIuser(int Udno); //D - remove/delete
+
+}
+========================================================================================
+IuserRepoImpl
+
+package com.ProjectInsurance1.Layer3;
+
+import java.util.Set;
+
+import org.springframework.stereotype.Repository;
+
+import com.ProjectInsurance1.Layer2.Iuser;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+
+
+
+@Repository("UdRepo")
+public class IuserRepoImpl implements IuserRepository {//isA
+	
+	
+	@PersistenceContext
+	 EntityManager entityManager;//auto injected by spring by reading 
+										//persistance.xml file
+	
+	@Transactional//no need of begin transaction and commit rollback
+	public void addIuser(Iuser UdRef) {//usesA
+		entityManager.persist(UdRef);
+		
+
+	}
+	
+	@Transactional
+	public Iuser findIuser(int Udno) {//producesA Department obj
+		//System.out.println("Department repo....NO scope of bussiness logic here...");
+		Iuser UdObj = entityManager.find(Iuser.class, Udno);
+		System.out.println(UdObj);
+		return UdObj;
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public Set<Iuser> findIusers() {
+		Set<Iuser> iuserSet;
+		iuserSet = new HashSet<Iuser>();
+		
+			String queryString = "from Iuser";
+			Query query = entityManager.createQuery(queryString);
+			iuserSet =new HashSet(query.getResultList());
+					
+		return iuserSet;
+		
+	}
+
+	@Transactional
+	public void modifyIuser(Iuser UdRef) {
+		entityManager.merge(UdRef);
+
+	}
+
+	@Transactional
+	public void removeIuser(int Udno) {
+		Iuser UdTemp = entityManager.find(Iuser.class,Udno);
+		entityManager.remove(UdTemp);
+		
+	}
+
+}
+======================================================================================
+
+ClaimRepoImp
+
+package com.ProjectInsurance1.Layer3;
+
+import java.util.Set;
+
+import org.springframework.stereotype.Repository;
+
+import com.ProjectInsurance1.Layer2.Claim;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+
+	
+
+
+@Repository("CdRepo")
+public class ClaimRepoImpl implements ClaimRepository {//isA
+	
+	
+	@PersistenceContext
+	 EntityManager entityManager;//auto injected by spring by reading 
+										//persistance.xml file
+	
+	@Transactional//no need of begin transaction and commit rollback
+	public void addClaim(Claim CdRef) {//usesA
+		entityManager.persist(CdRef);
+		
+
+	}
+	
+	@Transactional
+	public Claim findClaim(int Cdno) {//producesA Department obj
+		//System.out.println("Department repo....NO scope of bussiness logic here...");
+		Claim CdObj = entityManager.find(Claim.class, Cdno);
+		System.out.println(CdObj);
+		return CdObj;
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public Set<Claim> findClaims() {
+		Set<Claim> claimSet;
+		claimSet = new HashSet<Claim>();
+		
+			String queryString = "from Claim";
+			Query query = entityManager.createQuery(queryString);
+			claimSet = new HashSet(query.getResultList());
+					
+		return claimSet;
+		
+	}
+
+	@Transactional
+	public void modifyClaim(Claim CdRef) {
+		entityManager.merge(CdRef);
+
+	}
+
+	@Transactional
+	public void removeClaim(int Cdno) {
+		Claim CdTemp = entityManager.find(Claim.class,Cdno);
+		entityManager.remove(CdTemp);
+		
+	}
+
+	
+	
+
+}
